@@ -121,10 +121,11 @@ function sendMessage(recipientId, message) {
 }
 
 function processMessage(event) {
-  const senderId = event.sender.id;
+
 
   if (!event.message.is_echo) {
     const message = event.message;
+    const senderId = event.sender.id;
     let text;
 
     console.log(`Received message from senderId: ${senderId}`);
