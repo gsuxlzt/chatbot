@@ -122,9 +122,6 @@ function processMessage(event) {
         if (len === 3) {
           text = isNaN(Number(formattedMsg)) ? 'I need to know how much you need.' : 'Got it! For further information, please proceeded to your local branch.'
         }
-        else if (len === 2) {
-          text = 'Based from our calculations, you are eligible for a 10,000 loan.'
-        }
         else if (len === 1) {
           if (formattedMsg.includes('yes')) {
             text = 'Please wait while we compute your Inclusy score.'
