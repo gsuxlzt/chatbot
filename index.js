@@ -1,6 +1,7 @@
 var express = require("express");
 var request = require("request");
 var bodyParser = require("body-parser");
+var moment = require("moment");
 
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
@@ -11,6 +12,59 @@ app.listen((process.env.PORT || 5000));
 app.get("/", function (req, res) {
     res.send("Deployed!");
 });
+
+app.post("/user_info",function (req, res) {
+	if (!req.body.id) {
+		console.error("User id is needed")
+		res.sendStatus(500)
+	}
+	else {
+		let user = {}
+		let rand_year = Math.floor(Math.rand()*13) + 1;
+		let rand_work = Math.floor(Math.rand()*5);
+		let rand_educ = Math.floor(Math.rand()*3);
+		let bool = Math.floor(Math.rand()*2) === 0;
+		user.user_profile_creation_date = moment().subtract(rand,'years');
+		user.user_profile_id = req.body.id;
+		let user_background = {};
+		user_background.work getWorkStatus(rand_work);
+		user_background.education = getEducation(rand_educ);
+		user_background.age = bool ? 24 : 26;
+		user_background.family = bool
+		user.user_background = user_background
+		console.log(user)
+		res.send("User created")
+		res.sendStatus(200)
+
+	}
+
+})
+
+	function getWorkStatus (num) {
+		switch (num) {
+			case 0:
+				return 'UNEMPLOYED'
+			case 1:
+				return 'OTHER_MICRO_VENDOR'
+			case 2:
+				return 'SARI_SARI_VENDOR'
+			case 3:
+				return 'MARKET_VENDOR'
+			case 4:
+				return 'EMPLOYEE'
+		}
+	}
+
+	function getEducation (num) {
+		switch (num) {
+			case 0:
+				return 'NONE'
+			case 1:
+				return 'HIGH_SCHOOL'
+			case 2:
+				return 'COLLEGE'
+		}
+	}
 
 // Facebook Webhook
 // used for verification
@@ -71,6 +125,18 @@ function processPostback(event) {
       getFriendsList(senderId);
       sendMessage(senderId, {text: message});
     });
+    request({
+    	url: "/user_info",
+    	qs: {id: senderId},
+    	method: "POST",
+    }, function(error, response, body) {
+    	if (error) {
+    		console.log("Error" + error)
+    	}
+    	else {
+    		console.log(JSON.parse(body))
+    	}
+    })
   }
 }
 
@@ -89,23 +155,4 @@ function sendMessage(recipientId, message) {
       console.log("Error sending message: " + response.error);
     }
   });
-}
-
-function getFriendsList (id) {
-	console.log(id);
-	request({
-		url: 'https://graph.facebook.com/v2.11/me?fields=friends',
-		qs: {
-			access_token: process.env.PAGE_ACCESS_TOKEN
-		},
-		method: "GET",
-		function (error, response, body) {
-			console.log('THIS FIRED AS WELL');
-			if (error) {
-				console.log('error:' + error)
-			} else {
-				console.log(JSON.parse(body))
-			}
-		}
-	})
 }
