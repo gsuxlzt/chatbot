@@ -15,7 +15,7 @@ app.get("/", function (req, res) {
 
 app.post("/user_info",function (req, res) {
 	if (!req.body.id) {
-		console.error("User id is needed")
+		res.send("User id is needed")
 		res.sendStatus(500)
 	}
 	else {
