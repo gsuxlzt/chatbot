@@ -164,7 +164,7 @@ function processMessage(event) {
       if (steps.length && steps.length === 2) {
         text = 'Based from our records, you are eligible for a 10,000 loan.'
         steps.push(true)
-        setTimeout(sendMessage(senderId, text),500)
+        setTimeout(() => sendMessage(senderId, text), 500)
       }
     }
 }
