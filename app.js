@@ -158,7 +158,9 @@ function processMessage(event) {
       sendMessage(senderId, {text})
     }
     else {
+      console.log('test')
       if (steps.length && steps.length === 2) {
+        console.log('test2')
         text = 'Based from our records, you are eligible for a 10,000 loan.'
         steps.push(true)
         sendMessage(senderId, text)
