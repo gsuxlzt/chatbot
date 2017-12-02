@@ -58,7 +58,7 @@ app.post('/webhook', (req, res) => {
         console.log(event)
         if (event.postback) {
           processPostback(event);
-        } else if (event.message || steps.length === 2) {
+        } else if (event.message) {
           processMessage(event);
         }
       });
