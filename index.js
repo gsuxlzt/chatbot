@@ -124,13 +124,12 @@ function processMessage(event) {
           steps.pop()
         }
         else if (len === 1) {
-          if (steps[len-1] === 'yes') {
+          if (formattedMsg.includes('yes')) {
             text = 'May I ask how much'
             steps.push(true)
           }
           else {
             text = "I'm sorry, but I can only assist you with loan-related matters."
-            steps.pop()
           }
         }
       }
