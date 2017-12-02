@@ -159,6 +159,7 @@ function processMessage(event) {
 
       sendMessage(senderId, {text})
     }
+  }
     else {
       console.log('test')
       if (steps.length && steps.length === 2) {
@@ -168,7 +169,6 @@ function processMessage(event) {
         sendMessage(senderId, text)
       }
     }
-  }
 }
 
 function hasKeyword(message) {
