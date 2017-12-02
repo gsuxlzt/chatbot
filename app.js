@@ -95,7 +95,8 @@ function processPostback(event) {
       
       greeting = `${greeting} I am Inclusy, your intelligent loan officer bot. I can help you with loan and mortgage-related matters.`;
       user = new Applicant(senderId);
-      user.createRandomBackground()
+      user.createRandomBackground();
+      console.log(user);
 
       sendMessage(senderId, {text: greeting});
     });
