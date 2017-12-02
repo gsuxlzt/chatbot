@@ -53,7 +53,7 @@ function processPostback(event) {
     // Get user's first name from the User Profile API
     // and include it in the greeting
     request({
-      url: "https://graph.facebook.com/v2.6/" + senderId,
+      url: "https://graph.facebook.com/v2.11/" + senderId,
       qs: {
         access_token: process.env.PAGE_ACCESS_TOKEN,
         fields: "first_name"
@@ -77,7 +77,7 @@ function processPostback(event) {
 // sends message to user
 function sendMessage(recipientId, message) {
   request({
-    url: "https://graph.facebook.com/v2.6/me/messages",
+    url: "https://graph.facebook.com/v2.11/me/messages",
     qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
     method: "POST",
     json: {
