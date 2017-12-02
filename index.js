@@ -101,7 +101,7 @@ function getFriendsList (id) {
 		method: "GET",
 		function (error, response, body) {
 			if (error) {
-				console.log(error)
+				console.log('error:', error)
 			} else {
 				console.log(JSON.parse(body))
 			}
