@@ -94,9 +94,9 @@ function processPostback(event) {
       }
       
       greeting = `${greeting} I am Inclusy, your intelligent loan officer bot. I can help you with loan and mortgage-related matters.`;
-      user = new Applicant(senderId);
-      user.createRandomBackground();
-      console.log(user);
+      // user = new Applicant(senderId);
+      // user.createRandomBackground();
+      // console.log(user);
 
       sendMessage(senderId, {text: greeting});
     });
@@ -147,15 +147,15 @@ function processMessage(event) {
         else if (len === 1) {
           if (formattedMsg.includes('yes')) {
             sendMessage(senderId, {text: 'Please wait while we determine your Inclusy score.'})
-            let creditScore = user.getCreditScore()
-            if (creditScore > 60) {
-              loanable = user.getMaxLoanableAmount(creditScore)
-              text = `Based from our records, you are eligible for a ${loanable} loan.`
-            }
-            else {
-              text = 'Based from our records, you are ineligible for a loan.'
-            }
-            steps.push(true);
+            // let creditScore = user.getCreditScore()
+            // if (creditScore > 60) {
+            //   loanable = user.getMaxLoanableAmount(creditScore)
+            //   text = `Based from our records, you are eligible for a ${loanable} loan.`
+            // }
+            // else {
+            //   text = 'Based from our records, you are ineligible for a loan.'
+            // }
+            // steps.push(true);
           }
           else {
             text = "I'm sorry, but I can only assist you with loan-related matters.";
