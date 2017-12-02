@@ -15,6 +15,7 @@ app.get("/", function (req, res) {
 // Facebook Webhook
 // used for verification
 app.get("/webhook", function (req, res) {
+	console.log(req)
     if (req.query["hub.verify_token"] === "this_is_my_token") {
         console.log("Verified webhook");
         res.status(200).send(req.query["hub.challenge"]);
@@ -46,8 +47,6 @@ app.post("/webhook", function (req, res) {
 function processPostback(event) {
   var senderId = event.sender.id;
   var payload = event.postback.payload;
-  console.log(event.sender)
-  console.log(event.postback)
 
   if (payload === "Greeting") {
     // Get user's first name from the User Profile API
