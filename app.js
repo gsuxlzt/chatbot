@@ -11,6 +11,7 @@ app.listen((process.env.PORT || 5000));
 const Applicant = require('./classes/Applicant/Applicant').default;
 
 let steps = [];
+let user;
 
 // Server index page
 app.get('/', (req, res) => {
@@ -93,6 +94,7 @@ function processPostback(event) {
       }
       
       greeting = `${greeting} I am Inclusy, your intelligent loan officer bot. I can help you with loan and mortgage-related matters.`;
+      user = new Applicant(senderId);
 
       sendMessage(senderId, {text: greeting});
     });
@@ -118,6 +120,7 @@ function sendMessage(recipientId, message) {
 
 function processMessage(event) {
   const senderId = event.sender.id;
+
   if (!event.message.is_echo) {
     const message = event.message;
     let text;
@@ -140,9 +143,15 @@ function processMessage(event) {
         }
         else if (len === 1) {
           if (formattedMsg.includes('yes')) {
-            text = 'Please wait while we determine your Inclusy score.';
-            sendMessage(senderId, {text})
-            setTimeout(()=>text = 'Based from our records, you are eligible for a 10,000 loan.',1000)
+            sendMessage(senderId, {text: 'Please wait while we determine your Inclusy score.'})
+            let creditScore = user.getCreditScore()
+            if (creditScore > 60) {
+              loanable = user.getMaxLoanableAmount(creditScore)
+              text = `Based from our records, you are eligible for a ${loanable} loan.`
+            }
+            else {
+              text = 'Based from our records, you are ineligible for a loan.'
+            }
             steps.push(true);
           }
           else {

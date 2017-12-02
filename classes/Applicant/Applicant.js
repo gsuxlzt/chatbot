@@ -97,6 +97,14 @@ class Applicant {
 
         return creditScore;
     }
+    
+    getMaxLoanableAmount(creditScore) {
+        if (creditScore < 60) {
+            return 0;
+        } else {
+            return Math.floor(10000*(2 - (100 - creditScore)/40));
+        }
+    }
 }
 
 exports.default = Applicant;
