@@ -110,21 +110,24 @@ function processMessage(event) {
   if (!event.message.is_echo) {
     var message = event.message;
     var senderId = event.sender.id;
+    let text;
 
     console.log("Received message from senderId: " + senderId);
     console.log("Message is: " + JSON.stringify(message));
 
     if (message.text) {
-      let text;
-      var formattedMsg = message.text.toLowerCase().trim();
+            var formattedMsg = message.text.toLowerCase().trim();
       if (steps.length) {
         let len = steps.length
-        if (len === 2) {
+        if (len === 3) {
           text = isNaN(Number(formattedMsg)) ? 'I need to know how much you need.' : 'Got it! For further information, please proceeded to your local branch.'
+        }
+        else if (len === 2) {
+          text = 'Based from our calculations, you are eligible for a 10,000 loan.'
         }
         else if (len === 1) {
           if (formattedMsg.includes('yes')) {
-            text = 'May I ask how much'
+            text = 'Please wait while we compute your Inclusy score.'
             steps.push(true)
           }
           else {
@@ -139,6 +142,13 @@ function processMessage(event) {
         text = "I don't understand what you said."
       }
       sendMessage(senderId, {text})
+    }
+    else {
+      if (len === 2) {
+        text = 'Based from our calculations, you are eligible for a 10,000 loan.'
+        steps.push(true)
+        sendMessage(senderId, text)
+      }
     }
   }
 }
