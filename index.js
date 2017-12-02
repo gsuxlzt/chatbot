@@ -112,7 +112,7 @@ function createUser(id) {
 	let rand_educ = Math.floor(Math.random()*3);
 	let bool = Math.floor(Math.random()*2) === 0;
 	user.user_profile_creation_date = moment().subtract(rand_year,'years');
-	user.user_profile_id = req.body.id;
+	user.user_profile_id = id;
 	let user_background = {};
 	user_background.work = getWorkStatus(rand_work);
 	user_background.education = getEducation(rand_educ);
@@ -120,6 +120,8 @@ function createUser(id) {
 	user_background.family = bool
 	user.user_background = user_background
 	}
+
+	console.log('user created');
 }
 
 function getWorkStatus (num) {
