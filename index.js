@@ -13,31 +13,30 @@ app.get("/", function (req, res) {
     res.send("Deployed!");
 });
 
-app.post("/user_info", function (req, res) {
-	console.log('test')
-	if (!req.body.id) {
-		res.send("User needs an id");
-	}
-	else {
-		createUser(req.body.id)
-		res.sendStatus(200)
-	}
+// app.post("/user_info", function (req, res) {
+// 	console.log('test')
+// 	if (!req.body.id) {
+// 		res.send("User needs an id");
+// 	}
+// 	else {
+// 		createUser(req.body.id)
+// 		res.sendStatus(200)
+// 	}
 
-});
+// });
 
 
 
 // Facebook Webhook
 // used for verification
 app.get("/webhook", function (req, res) {
-	console.log(req.query)
-    if (req.query["hub.verify_token"] === "this_is_my_token") {
-        console.log("Verified webhook");
-        res.status(200).send(req.query["hub.challenge"]);
-    } else {
-        console.error("Verification failed. The tokens do not match");
-        res.sendStatus(403);
-    }
+  if (req.query["hub.verify_token"] === "this_is_my_token") {
+      console.log("Verified webhook");
+      res.status(200).send(req.query["hub.challenge"]);
+  } else {
+      console.error("Verification failed. The tokens do not match");
+      res.sendStatus(403);
+  }
 });
 
 // All callbacks for Messenger will be POST-ed here
@@ -51,6 +50,8 @@ app.post("/webhook", function (req, res) {
       entry.messaging.forEach(function(event) {
         if (event.postback) {
           processPostback(event);
+        } else if (event.message) {
+          processMessage(event);
         }
       });
     });
@@ -67,7 +68,7 @@ function processPostback(event) {
     // Get user's first name from the User Profile API
     // and include it in the greeting
     request({
-      url: "https://graph.facebook.com/v2.11/" + senderId,
+      url: "https://graph.facebook.com/v2.6/" + senderId,
       qs: {
         access_token: process.env.PAGE_ACCESS_TOKEN,
         fields: "first_name"
@@ -82,21 +83,21 @@ function processPostback(event) {
         name = bodyObj.first_name;
         greeting = "Hi " + name + ". ";
       }
-      var message = greeting;
-      createUser(senderId);
+      var message = greeting + "I am Inclusy, your intelligent loan officer bot. I can help you with loan and mortgage-related matters.";
       sendMessage(senderId, {text: message});
     });
+  }
 }
 
 // sends message to user
 function sendMessage(recipientId, message) {
   request({
-    url: "https://graph.facebook.com/v2.11/me/messages",
+    url: "https://graph.facebook.com/v2.6/me/messages",
     qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
     method: "POST",
     json: {
       recipient: {id: recipientId},
-      message: message,
+      message: message
     }
   }, function(error, response, body) {
     if (error) {
@@ -105,47 +106,35 @@ function sendMessage(recipientId, message) {
   });
 }
 
-function createUser(id) {
-	let user = {}
-	let rand_year = Math.floor(Math.random()*13) + 1;
-	let rand_work = Math.floor(Math.random()*5);
-	let rand_educ = Math.floor(Math.random()*3);
-	let bool = Math.floor(Math.random()*2) === 0;
-	user.user_profile_creation_date = moment().subtract(rand_year,'years');
-	user.user_profile_id = id;
-	let user_background = {};
-	user_background.work = getWorkStatus(rand_work);
-	user_background.education = getEducation(rand_educ);
-	user_background.age = bool ? 24 : 26;
-	user_background.family = bool
-	user.user_background = user_background
-	}
+function processMessage(event) {
+  if (!event.message.is_echo) {
+    var message = event.message;
+    var senderId = event.sender.id;
 
-	console.log('user created');
-}
+    console.log("Received message from senderId: " + senderId);
+    console.log("Message is: " + JSON.stringify(message));
 
-function getWorkStatus (num) {
-	switch (num) {
-		case 0:
-			return 'UNEMPLOYED'
-		case 1:
-			return 'OTHER_MICRO_VENDOR'
-		case 2:
-			return 'SARI_SARI_VENDOR'
-		case 3:
-			return 'MARKET_VENDOR'
-		case 4:
-			return 'EMPLOYEE'
-	}
-}
+    if (message.text) {
+      var formattedMsg = message.text.toLowerCase().trim();
 
-function getEducation (num) {
-	switch (num) {
-		case 0:
-			return 'NONE'
-		case 1:
-			return 'HIGH_SCHOOL'
-		case 2:
-			return 'COLLEGE'
-	}
+      if (steps.length === 0 && formattedMsg.includes('loan') || formattedMsg.includes('mortgage') || formattedMsg.includes('borrow') || formattedMsg.includes('business') || formattedMsg.includes('peso')) {
+        sendMessage(senderId, {text: "May I clarify that you're asking for a loan? Please reply 'Yes' or 'No'."}, true);
+        steps.push(true);
+      } else if (steps[0] === true) {
+          if (formattedMsg.includes('yes')) {
+            sendMessage(senderId, {text: "May I ask how much?"});
+            steps.push(true);
+          } else {
+            steps.push(false);
+          }
+      } else {
+        if (steps[1] === true) {
+          sendMessage(senderId, {text: "Got it! For further information, please proceeded to your local branch."});
+        } else {
+          sendMessage(senderId, {text: "I'm sorry, but I can only assist you with loan-related matters."});
+        }
+        sendMessage(senderId, {text: "Thank you and have a nice day."});
+      }
+    }
+  }
 }
