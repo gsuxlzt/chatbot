@@ -11,7 +11,6 @@ app.listen((process.env.PORT || 5000));
 const Applicant = require('./classes/Applicant/Applicant').default;
 
 let steps = [];
-let user = {};
 
 // Server index page
 app.get('/', (req, res) => {
@@ -33,27 +32,27 @@ app.post("/user_info", function (req, res) {
 
 // Facebook Webhook
 // used for verification
-// Facebook Webhook
-// used for verification
-app.get("/webhook", function (req, res) {
-  if (req.query["hub.verify_token"] === "this_is_my_token") {
+app.get('/webhook', (req, res) => {
+  if (req.query['hub.verify_token'] === 'this_is_my_token') {
       console.log("Verified webhook");
-      res.status(200).send(req.query["hub.challenge"]);
+
+      res.status(200).send(req.query['hub.challenge']);
   } else {
       console.error("Verification failed. The tokens do not match");
+
       res.sendStatus(403);
   }
 });
 
 // All callbacks for Messenger will be POST-ed here
-app.post("/webhook", function (req, res) {
+app.post('/webhook', (req, res) => {
   // Make sure this is a page subscription
-  if (req.body.object == "page") {
+  if (req.body.object === 'page') {
     // Iterate over each entry
     // There may be multiple entries if batched
-    req.body.entry.forEach(function(entry) {
+    req.body.entry.forEach(entry => {
       // Iterate over each messaging event
-      entry.messaging.forEach(function(event) {
+      entry.messaging.forEach(event => {
         if (event.postback) {
           processPostback(event);
         } else if (event.message) {
@@ -67,33 +66,33 @@ app.post("/webhook", function (req, res) {
 });
 
 function processPostback(event) {
-  var senderId = event.sender.id;
-  var payload = event.postback.payload;
+  const senderId = event.sender.id;
+  const payload = event.postback.payload;
 
-  if (payload === "Greeting") {
+  if (payload === 'Greeting') {
     // Get user's first name from the User Profile API
     // and include it in the greeting
     request({
-      url: "https://graph.facebook.com/v2.6/" + senderId,
+      url: `https://graph.facebook.com/v2.6/${senderId}`,
       qs: {
         access_token: process.env.PAGE_ACCESS_TOKEN,
-        fields: "first_name"
+        fields: 'first_name'
       },
-      method: "GET"
-    }, function(error, response, body) {
-      var greeting = "";
+      method: 'GET'
+    }, (error, response, body) => {
+      let greeting = "";
+
       if (error) {
-        console.log("Error getting user's name: " +  error);
+        console.log(`Error getting user's name: ${error}`);
       } else {
-        var bodyObj = JSON.parse(body);
-        name = bodyObj.first_name;
-        greeting = "Hi " + name + ". ";
+        const bodyObj = JSON.parse(body);
+
+        greeting = `Hi ${bodyObj.first_name}.`;
       }
-      var message = greeting + "I am Inclusy, your intelligent loan officer bot. I can help you with loan and mortgage-related matters.";
-            user = new Applicant(senderId);
-      user.createRandomBackground();
-      console.log(user);
-      sendMessage(senderId, {text: message});
+      
+      greeting = `${greeting} I am Inclusy, your intelligent loan officer bot. I can help you with loan and mortgage-related matters.`;
+
+      sendMessage(senderId, {text: greeting});
     });
   }
 }
@@ -116,18 +115,15 @@ function sendMessage(recipientId, message) {
 }
 
 function processMessage(event) {
-
-
   if (!event.message.is_echo) {
     const message = event.message;
     const senderId = event.sender.id;
-
 
     console.log(`Received message from senderId: ${senderId}`);
     console.log(`Message is: ${JSON.stringify(message)}`);
 
     if (message.text) {
-    let text;
+      let text;
 
       const formattedMsg = message.text.toLowerCase().trim();
 
@@ -137,19 +133,12 @@ function processMessage(event) {
         if (len === 2) {
           text = isNaN(Number(formattedMsg)) ?
               'I need to know how much you need.' :
-              'Got it! For further information, please proceeded to your local branch.';
+              'Got it! For further information, please proceed to your local branch.';
         }
         else if (len === 1) {
           if (formattedMsg.includes('yes')) {
-            sendMessage(senderId, {text: 'Please wait while we determine your Inclusy score.'})
-            let creditScore = user.getCreditScore()
-            if (creditScore > 60) {
-              let loanable = user.getMaxLoanableAmount(creditScore)
-              text = `Based from our records, you are eligible for a ${loanable} loan.`
-            }
-            else {
-              text = 'Based from our records, you are ineligible for a loan.'
-            }
+            text = 'May I ask how much';
+
             steps.push(true);
           }
           else {
