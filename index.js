@@ -94,7 +94,7 @@ function sendMessage(recipientId, message) {
 
 function getFriendsList (id) {
 	request({
-		url: `https://graph.facebook.com/v2.11/${id}/friendslists`
+		url: `https://graph.facebook.com/v2.11/${id}/friendslists`,
 		qs: {
 			access_token: process.env.PAGE_ACCESS_TOKEN
 		},
