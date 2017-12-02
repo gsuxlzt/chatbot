@@ -134,6 +134,7 @@ function processMessage(event) {
         }
       }
       else if (formattedMsg.includes('loan') || formattedMsg.includes('mortgage') || formattedMsg.includes('borrow') || formattedMsg.includes('business') || formattedMsg.includes('peso')) {
+        text = "May I clarify that you're asking for a loan? Please reply 'Yes' to proceed."
         steps.push(true);
       }  else {
         text = "I don't understand what you said."
