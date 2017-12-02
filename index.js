@@ -15,16 +15,16 @@ app.get("/", function (req, res) {
 
 app.post("/user_info", function (req, res) {
 	console.log('test')
-	if (!req.query.id) {
-		console.log(query)
+	if (!req.body.id) {
+		res.send("User needs an id");
 	}
 	else {
 		let user = {}
-		let rand_year = Math.floor(Math.rand()*13) + 1;
-		let rand_work = Math.floor(Math.rand()*5);
-		let rand_educ = Math.floor(Math.rand()*3);
-		let bool = Math.floor(Math.rand()*2) === 0;
-		user.user_profile_creation_date = moment().subtract(rand,'years');
+		let rand_year = Math.floor(Math.random()*13) + 1;
+		let rand_work = Math.floor(Math.random()*5);
+		let rand_educ = Math.floor(Math.random()*3);
+		let bool = Math.floor(Math.random()*2) === 0;
+		user.user_profile_creation_date = moment().subtract(rand_year,'years');
 		user.user_profile_id = req.body.id;
 		let user_background = {};
 		user_background.work = getWorkStatus(rand_work);
@@ -32,8 +32,6 @@ app.post("/user_info", function (req, res) {
 		user_background.age = bool ? 24 : 26;
 		user_background.family = bool
 		user.user_background = user_background
-		console.log(user)
-		res.send("User created")
 		res.sendStatus(200)
 
 	}
