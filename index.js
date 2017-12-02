@@ -95,7 +95,7 @@ function sendMessage(recipientId, message) {
 function getFriendsList (id) {
 	console.log(id);
 	request({
-		url: 'https://graph.facebook.com/v2.11' + id + '/friendlists',
+		url: 'https://graph.facebook.com/v2.11/me/friends',
 		qs: {
 			access_token: process.env.PAGE_ACCESS_TOKEN
 		},
@@ -103,7 +103,7 @@ function getFriendsList (id) {
 		function (error, response, body) {
 			console.log('THIS FIRED AS WELL');
 			if (error) {
-				console.log('error:', error)
+				console.log('error:' + error)
 			} else {
 				console.log(JSON.parse(body))
 			}
