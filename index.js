@@ -115,26 +115,30 @@ function processMessage(event) {
     console.log("Message is: " + JSON.stringify(message));
 
     if (message.text) {
+      let text;
       var formattedMsg = message.text.toLowerCase().trim();
-
-      if (steps.length === 0 && formattedMsg.includes('loan') || formattedMsg.includes('mortgage') || formattedMsg.includes('borrow') || formattedMsg.includes('business') || formattedMsg.includes('peso')) {
-        sendMessage(senderId, {text: "May I clarify that you're asking for a loan? Please reply 'Yes' or 'No'."}, true);
-        steps.push(true);
-      } else if (steps[0] === true) {
-          if (formattedMsg.includes('yes')) {
-            sendMessage(senderId, {text: "May I ask how much?"});
-            steps.push(true);
-          } else {
-            steps.push(false);
-          }
-      } else {
-        if (steps[1] === true) {
-          sendMessage(senderId, {text: "Got it! For further information, please proceeded to your local branch."});
-        } else {
-          sendMessage(senderId, {text: "I'm sorry, but I can only assist you with loan-related matters."});
+      if (steps.length) {
+        let len = steps.length
+        if (len === 2) {
+          text = !isNaN(steps[len-1]) ? 'Got it! For further information, please proceeded to your local branch.' : 'I need to know how much you need.'
+          steps.pop()
         }
-        sendMessage(senderId, {text: "Thank you and have a nice day."});
+        else if (len === 1) {
+          if (steps[len-1] === 'yes') {
+            text = 'May I ask how much'
+            steps.push(true)
+          }
+          else {
+            text = "I'm sorry, but I can only assist you with loan-related matters."
+          }
+        }
       }
+      else if (formattedMsg.includes('loan') || formattedMsg.includes('mortgage') || formattedMsg.includes('borrow') || formattedMsg.includes('business') || formattedMsg.includes('peso')) {
+        steps.push(true);
+      }  else {
+        text = "I don't understand what you said."
+      }
+      sendMessage(senderId, {text})
     }
   }
 }
