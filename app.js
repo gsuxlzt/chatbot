@@ -142,7 +142,7 @@ function processMessage(event) {
           if (formattedMsg.includes('yes')) {
             text = 'Please wait while we determine your Inclusy score.';
             sendMessage(senderId, {text})
-            text = 'Based from our records, you are eligible for a 10,000 loan.'
+            setTimeout(()=>text = 'Based from our records, you are eligible for a 10,000 loan.',1000)
             steps.push(true);
           }
           else {
