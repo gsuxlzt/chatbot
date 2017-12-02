@@ -120,7 +120,7 @@ function processMessage(event) {
       if (steps.length) {
         let len = steps.length
         if (len === 2) {
-          text = isNaN(Number(steps[len-1])) ? 'I need to know how much you need.' : 'Got it! For further information, please proceeded to your local branch.'
+          text = typeof steps[len-1] !== 'number' ? 'I need to know how much you need.' : 'Got it! For further information, please proceeded to your local branch.'
         }
         else if (len === 1) {
           if (formattedMsg.includes('yes')) {
