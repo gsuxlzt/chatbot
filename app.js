@@ -133,7 +133,7 @@ function processMessage(event) {
       if (steps.length) {
         let len = steps.length;
 
-        if (len === 3) {
+        if (len === 2) {
           text = isNaN(Number(formattedMsg)) ?
               'I need to know how much you need.' :
               'Got it! For further information, please proceeded to your local branch.';
@@ -141,6 +141,8 @@ function processMessage(event) {
         else if (len === 1) {
           if (formattedMsg.includes('yes')) {
             text = 'Please wait while we determine your Inclusy score.';
+            sendMessage(senderId, {text})
+            text = 'Based from our records, you are eligible for a 10,000 loan.'
             steps.push(true);
           }
           else {
@@ -159,15 +161,7 @@ function processMessage(event) {
 
       sendMessage(senderId, {text})
     }
-        else {
-      if (steps.length && steps.length === 2) {
-        text = 'Based from our records, you are eligible for a 10,000 loan.'
-        steps.push(true)
-        setTimeout(() => sendMessage(senderId, text), 500)
-      }
-    }
   }
-
 }
 
 function hasKeyword(message) {
