@@ -122,7 +122,6 @@ function processPostback(event) {
         greeting = "Hi " + name + ". ";
       }
       var message = greeting;
-      getFriendsList(senderId);
       sendMessage(senderId, {text: message});
     });
     request({
