@@ -159,14 +159,15 @@ function processMessage(event) {
 
       sendMessage(senderId, {text})
     }
-  }
-    else {
+        else {
       if (steps.length && steps.length === 2) {
         text = 'Based from our records, you are eligible for a 10,000 loan.'
         steps.push(true)
         setTimeout(() => sendMessage(senderId, text), 500)
       }
     }
+  }
+
 }
 
 function hasKeyword(message) {
