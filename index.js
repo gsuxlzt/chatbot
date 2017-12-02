@@ -130,6 +130,7 @@ function processMessage(event) {
           }
           else {
             text = "I'm sorry, but I can only assist you with loan-related matters."
+            steps.pop()
           }
         }
       }
