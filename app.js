@@ -11,7 +11,7 @@ app.listen((process.env.PORT || 5000));
 const Applicant = require('./classes/Applicant/Applicant').default;
 
 let steps = [];
-let user;
+let user = {};
 
 // Server index page
 app.get('/', (req, res) => {
@@ -95,6 +95,7 @@ function processPostback(event) {
       
       greeting = `${greeting} I am Inclusy, your intelligent loan officer bot. I can help you with loan and mortgage-related matters.`;
       user = new Applicant(senderId);
+      user.createRandomBackground()
 
       sendMessage(senderId, {text: greeting});
     });
