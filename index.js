@@ -24,7 +24,7 @@ app.get("/", function (req, res) {
 // 	}
 
 // });
-
+var steps = [];
 
 
 // Facebook Webhook
