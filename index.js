@@ -27,7 +27,7 @@ app.post("/user_info",function (req, res) {
 		user.user_profile_creation_date = moment().subtract(rand,'years');
 		user.user_profile_id = req.body.id;
 		let user_background = {};
-		user_background.work getWorkStatus(rand_work);
+		user_background.work = getWorkStatus(rand_work);
 		user_background.education = getEducation(rand_educ);
 		user_background.age = bool ? 24 : 26;
 		user_background.family = bool
