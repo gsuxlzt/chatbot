@@ -46,6 +46,8 @@ app.post("/webhook", function (req, res) {
 function processPostback(event) {
   var senderId = event.sender.id;
   var payload = event.postback.payload;
+  console.log(senderId)
+  console.log(payload)
 
   if (payload === "Greeting") {
     // Get user's first name from the User Profile API
@@ -66,7 +68,7 @@ function processPostback(event) {
         name = bodyObj.first_name;
         greeting = "Hi " + name + ". ";
       }
-      var message = greeting + "My name is SP Movie Bot. I can tell you various details regarding movies. What movie would you like to know about?";
+      var message = greeting;
       sendMessage(senderId, {text: message});
     });
   }
