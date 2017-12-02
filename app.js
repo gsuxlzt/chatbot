@@ -117,9 +117,9 @@ function sendMessage(recipientId, message) {
 }
 
 function processMessage(event) {
+  const senderId = event.sender.id;
   if (!event.message.is_echo) {
     const message = event.message;
-    const senderId = event.sender.id;
     let text;
 
     console.log(`Received message from senderId: ${senderId}`);
@@ -161,12 +161,10 @@ function processMessage(event) {
     }
   }
     else {
-      console.log('test')
       if (steps.length && steps.length === 2) {
-        console.log('test2')
         text = 'Based from our records, you are eligible for a 10,000 loan.'
         steps.push(true)
-        sendMessage(senderId, text)
+        setTimeout(sendMessage(senderId, text),500)
       }
     }
 }
