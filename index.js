@@ -14,9 +14,9 @@ app.get("/", function (req, res) {
 });
 
 app.post("/user_info",function (req, res) {
-	if (!req.body.id) {
+	if (!req.query["id"]) {
 		res.send(req)
-		res.sendStatus(500)
+		// res.sendStatus(500)
 	}
 	else {
 		let user = {}
