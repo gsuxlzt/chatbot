@@ -4,7 +4,7 @@ var bodyParser = require("body-parser");
 var moment = require("moment");
 
 var app = express();
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.listen((process.env.PORT || 5000));
 
@@ -13,10 +13,10 @@ app.get("/", function (req, res) {
     res.send("Deployed!");
 });
 
-app.post("/user_info",function (req, res) {
-	if (!req.query["id"]) {
-		res.send(req)
-		// res.sendStatus(500)
+app.post("/user_info", function (req, res) {
+	console.log('test')
+	if (!req.query.id) {
+		console.log(query)
 	}
 	else {
 		let user = {}
@@ -37,34 +37,8 @@ app.post("/user_info",function (req, res) {
 		res.sendStatus(200)
 
 	}
+});
 
-})
-
-	function getWorkStatus (num) {
-		switch (num) {
-			case 0:
-				return 'UNEMPLOYED'
-			case 1:
-				return 'OTHER_MICRO_VENDOR'
-			case 2:
-				return 'SARI_SARI_VENDOR'
-			case 3:
-				return 'MARKET_VENDOR'
-			case 4:
-				return 'EMPLOYEE'
-		}
-	}
-
-	function getEducation (num) {
-		switch (num) {
-			case 0:
-				return 'NONE'
-			case 1:
-				return 'HIGH_SCHOOL'
-			case 2:
-				return 'COLLEGE'
-		}
-	}
 
 // Facebook Webhook
 // used for verification
@@ -155,3 +129,30 @@ function sendMessage(recipientId, message) {
     }
   });
 }
+
+
+	function getWorkStatus (num) {
+		switch (num) {
+			case 0:
+				return 'UNEMPLOYED'
+			case 1:
+				return 'OTHER_MICRO_VENDOR'
+			case 2:
+				return 'SARI_SARI_VENDOR'
+			case 3:
+				return 'MARKET_VENDOR'
+			case 4:
+				return 'EMPLOYEE'
+		}
+	}
+
+	function getEducation (num) {
+		switch (num) {
+			case 0:
+				return 'NONE'
+			case 1:
+				return 'HIGH_SCHOOL'
+			case 2:
+				return 'COLLEGE'
+		}
+	}
