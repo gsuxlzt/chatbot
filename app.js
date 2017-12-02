@@ -53,9 +53,11 @@ app.post('/webhook', (req, res) => {
     req.body.entry.forEach(entry => {
       // Iterate over each messaging event
       entry.messaging.forEach(event => {
+        console.log(steps.length)
+        console.log(event)
         if (event.postback) {
           processPostback(event);
-        } else if (event.message) {
+        } else if (event.message || steps.length === 2) {
           processMessage(event);
         }
       });
