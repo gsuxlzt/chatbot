@@ -15,7 +15,7 @@ app.get("/", function (req, res) {
 
 app.post("/user_info",function (req, res) {
 	if (!req.body.id) {
-		res.send(req.query)
+		res.send(req)
 		res.sendStatus(500)
 	}
 	else {
