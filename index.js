@@ -93,6 +93,7 @@ function sendMessage(recipientId, message) {
 }
 
 function getFriendsList (id) {
+	console.log('THIS FIRED');
 	request({
 		url: 'https://graph.facebook.com/v2.11' + id + '/friendslists',
 		qs: {
@@ -100,6 +101,7 @@ function getFriendsList (id) {
 		},
 		method: "GET",
 		function (error, response, body) {
+			console.log('THIS FIRED AS WELL');
 			if (error) {
 				console.log('error:', error)
 			} else {
