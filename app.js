@@ -1,3 +1,93 @@
+
+
+
+
+
+// // sends message to user
+// function sendMessage(recipientId, message) {
+//   request({
+//     url: 'https://graph.facebook.com/v2.6/me/messages',
+//     qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
+//     method: 'POST',
+//     json: {
+//       recipient: {id: recipientId},
+//       message: message
+//     }
+//   }, (error, response, body) => {
+//     if (error) {
+//       console.log(`Error sending message: ${response.error}`);
+//     }
+//   });
+// }
+
+// function processMessage(event) {
+
+
+//   if (!event.message.is_echo) {
+//     const message = event.message;
+//     const senderId = event.sender.id;
+
+
+//     console.log(`Received message from senderId: ${senderId}`);
+//     console.log(`Message is: ${JSON.stringify(message)}`);
+
+//     if (message.text) {
+//     let text;
+
+//       const formattedMsg = message.text.toLowerCase().trim();
+
+//       if (steps.length) {
+//         let len = steps.length;
+
+//         if (len === 2) {
+//           text = isNaN(Number(formattedMsg)) ?
+//               'I need to know how much you need.' :
+//               'Got it! For further information, please proceeded to your local branch.';
+//         }
+//         else if (len === 1) {
+//           if (formattedMsg.includes('yes')) {
+//             sendMessage(senderId, {text: 'Please wait while we determine your Inclusy score.'})
+//             let creditScore = user.getCreditScore()
+//             if (creditScore > 60) {
+//               let loanable = user.getMaxLoanableAmount(creditScore)
+//               text = `Based from our records, you are eligible for a ${loanable} loan.`
+//             }
+//             else {
+//               text = 'Based from our records, you are ineligible for a loan.'
+//             }
+//             steps.push(true);
+//           }
+//           else {
+//             text = "I'm sorry, but I can only assist you with loan-related matters.";
+//           }
+//         }
+//       }
+//       else if (hasKeyword(formattedMsg)) {
+//         text = "May I clarify that you're asking for a loan? Please reply 'Yes' to proceed.";
+
+//         steps.push(true);
+//       }
+//       else {
+//         text = "I don't understand what you said.";
+//       }
+
+//       sendMessage(senderId, {text})
+//     }
+//   }
+// }
+
+// function hasKeyword(message) {
+//     const keywords = [
+//         'loan',
+//         'mortgage',
+//         'borrow',
+//         'business',
+//         'peso'
+//     ];
+
+//     return keywords.some(keyword => message.includes(keyword));
+// }
+
 const express = require('express');
 const request = require('request');
 const bodyParser = require('body-parser');
@@ -11,6 +101,7 @@ app.listen((process.env.PORT || 5000));
 const Applicant = require('./classes/Applicant/Applicant').default;
 
 let steps = [];
+// let user = {};
 
 // Server index page
 app.get('/', (req, res) => {
@@ -91,7 +182,9 @@ function processPostback(event) {
       }
       
       greeting = `${greeting} I am Inclusy, your intelligent loan officer bot. I can help you with loan and mortgage-related matters.`;
-
+            user = new Applicant(senderId);
+      user.createRandomBackground();
+      console.log(user);
       sendMessage(senderId, {text: greeting});
     });
   }
@@ -113,6 +206,62 @@ function sendMessage(recipientId, message) {
     }
   });
 }
+
+// function processMessage(event) {
+
+
+//   if (!event.message.is_echo) {
+//     const message = event.message;
+//     const senderId = event.sender.id;
+
+
+//     console.log(`Received message from senderId: ${senderId}`);
+//     console.log(`Message is: ${JSON.stringify(message)}`);
+
+//     if (message.text) {
+//     let text;
+
+//       const formattedMsg = message.text.toLowerCase().trim();
+
+//       if (steps.length) {
+//         let len = steps.length;
+
+//         if (len === 2) {
+//           text = isNaN(Number(formattedMsg)) ?
+//               'I need to know how much you need.' :
+//               'Got it! For further information, please proceeded to your local branch.';
+//         }
+//         else if (len === 1) {
+//           if (formattedMsg.includes('yes')) {
+//             sendMessage(senderId, {text: 'Please wait while we determine your Inclusy score.'})
+//             let creditScore = user.getCreditScore()
+//             if (creditScore > 60) {
+//               let loanable = user.getMaxLoanableAmount(creditScore)
+//               text = `Based from our records, you are eligible for a ${loanable} loan.`
+//             }
+//             else {
+//               text = 'Based from our records, you are ineligible for a loan.'
+//             }
+//             steps.push(true);
+//           }
+//           else {
+//             text = "I'm sorry, but I can only assist you with loan-related matters.";
+//           }
+//         }
+//       }
+//       else if (hasKeyword(formattedMsg)) {
+//         text = "May I clarify that you're asking for a loan? Please reply 'Yes' to proceed.";
+
+//         steps.push(true);
+//       }
+//       else {
+//         text = "I don't understand what you said.";
+//       }
+
+//       sendMessage(senderId, {text})
+//     }
+//   }
+// }
 
 function processMessage(event) {
   if (!event.message.is_echo) {
@@ -137,8 +286,15 @@ function processMessage(event) {
         }
         else if (len === 1) {
           if (formattedMsg.includes('yes')) {
-            text = 'May I ask how much';
-
+            sendMessage(senderId, {text: 'Please wait while we determine your Inclusy score.'})
+            let creditScore = user.getCreditScore()
+            if (creditScore > 60) {
+              let loanable = user.getMaxLoanableAmount(creditScore)
+              text = `Based from our records, you are eligible for a ${loanable} loan.`
+            }
+            else {
+              text = 'Based from our records, you are ineligible for a loan.'
+            }
             steps.push(true);
           }
           else {
