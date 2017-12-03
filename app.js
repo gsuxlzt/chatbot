@@ -11,7 +11,7 @@ app.listen((process.env.PORT || 5000));
 const Applicant = require('./classes/Applicant/Applicant').default;
 
 let steps = [];
-// let user = {};
+let user = {};
 
 // Server index page
 app.get('/', (req, res) => {
